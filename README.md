@@ -1,5 +1,7 @@
 `rmq` is a command line Swiss army knife for sending and receiving messages to and from RabbitMQ.
 
+[![Build Status](https://travis-ci.org/relops/rmq.png?branch=master)](https://travis-ci.org/relops/rmq)
+
 Example
 -------
 
