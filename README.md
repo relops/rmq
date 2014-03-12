@@ -1,6 +1,3 @@
-rmq
-===
-
 `rmq` is a command line Swiss army knife for sending and receiving messages to and from RabbitMQ.
 
 Example
