@@ -35,6 +35,16 @@ $ go get github.com/relops/rmq
 
 This will put the `rmq` binary in $GOPATH/bin.
 
+Roadmap
+-------
+
+In no particular order:
+
+* Pre-built binaries so you don't need to have Go installed
+* Integration with the RabbitMQ management API
+* Rate limting
+* Flow control
+
 License
 -------
 
