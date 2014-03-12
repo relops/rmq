@@ -22,6 +22,32 @@ $ rmq -d out -q foo
 2014-12-03 10:53:59.813 - [290980845845254145] receiving 64 bytes (8bd39598)
 ```
 
+Options
+-------
+
+```
+$ rmq -h
+Usage:
+  rmq [OPTIONS]
+
+Application Options:
+  -d, --direction= Use rmq to send (-d in) or receive (-d out) messages
+  -x, --exchange=  The exchange to send to (-d in) or bind a queue to when receiving (-d out)
+  -q, --queue=     The queue to receive from (when used with -d in)
+  -k, --key=       The key to use for routing (-d in) or for queue binding (-d out)
+  -c, --count=     The number of messages to send (10)
+  -i, --interval=  The delay (in ms) between sending messages (10)
+  -u, --user=      The user to connect as (guest)
+  -P, --pass=      The user's password (guest)
+  -H, --host=      The Rabbit host to connect to (localhost)
+  -p, --port=      The Rabbit port to connect on (5672)
+  -e, --entropy    Display message level entropy information (false)
+  -V, --version    Print rmq version and exit
+
+Help Options:
+  -h, --help       Show this help message
+```
+
 Installation
 ------------
 
