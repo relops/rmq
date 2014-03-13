@@ -16,7 +16,7 @@ type Options struct {
 	Key       string  `short:"k" long:"key" description:"The key to use for routing (-d in) or for queue binding (-d out)"`
 	Count     int     `short:"c" long:"count" description:"The number of messages to send" default:"10"`
 	Interval  int     `short:"i" long:"interval" description:"The delay (in ms) between sending messages" default:"10"`
-	Size      float64 `short:"z" long:"size" description:"Message size in bytes" default:"1"`
+	Size      float64 `short:"z" long:"size" description:"Message size in kB" default:"1"`
 	StdDev    int     `short:"t" long:"stddev" description:"Standard deviation of message size" default:"0"`
 	Username  string  `short:"u" long:"user" description:"The user to connect as" default:"guest"`
 	Password  string  `short:"P" long:"pass" description:"The user's password" default:"guest"`
