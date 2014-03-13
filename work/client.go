@@ -3,7 +3,7 @@ package work
 import (
 	"github.com/0x6e6562/gosnow"
 	log "github.com/cihub/seelog"
-	"github.com/streadway/amqp"
+	"github.com/relops/amqp"
 )
 
 const (

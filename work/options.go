@@ -2,7 +2,7 @@ package work
 
 import (
 	"errors"
-	"github.com/streadway/amqp"
+	"github.com/relops/amqp"
 )
 
 var (
@@ -20,6 +20,7 @@ type Options struct {
 	Interval   int     `short:"i" long:"interval" description:"The delay (in ms) between sending messages" default:"10"`
 	Size       float64 `short:"z" long:"size" description:"Message size in kB" default:"1"`
 	StdDev     int     `short:"t" long:"stddev" description:"Standard deviation of message size" default:"0"`
+	Renew      bool    `short:"r" long:"renew" description:"Automatically resubscribe when the server cancels a subscription (used for mirrored queues)" default:"false"`
 	Username   string  `short:"u" long:"user" description:"The user to connect as" default:"guest"`
 	Password   string  `short:"w" long:"pass" description:"The user's password" default:"guest"`
 	Host       string  `short:"H" long:"host" description:"The Rabbit host to connect to" default:"localhost"`
