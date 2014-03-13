@@ -72,9 +72,19 @@ func handle(deliveries <-chan amqp.Delivery, opts *Options, signal chan error) {
 
 		if opts.Entropy {
 			label := shortLabel(d.CorrelationId)
-			log.Infof("[%s] receiving %d bytes (%x) @ %.2f ms :: [%s, %x]", d.MessageId, len(d.Body), sum, latency, label, ent)
+			if hasLatency {
+				log.Infof("[%s] receiving %d bytes (%x) @ %.2f ms :: [%s, %x]", d.MessageId, len(d.Body), sum, latency, label, ent)
+			} else {
+				log.Infof("[%s] receiving %d bytes (%x) :: [%s, %x]", d.MessageId, len(d.Body), sum, label, ent)
+			}
+
 		} else {
-			log.Infof("[%s] receiving %d bytes (%x) @ %.2f ms", d.MessageId, len(d.Body), sum, latency)
+			if hasLatency {
+				log.Infof("[%s] receiving %d bytes (%x) @ %.2f ms", d.MessageId, len(d.Body), sum, latency)
+			} else {
+				log.Infof("[%s] receiving %d bytes (%x)", d.MessageId, len(d.Body), sum)
+			}
+
 		}
 
 	}
