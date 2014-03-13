@@ -16,6 +16,7 @@ func StartSender(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
 
 	if err != nil {
 		signal <- err
+		return
 	}
 
 	s.flake = flake
@@ -23,6 +24,7 @@ func StartSender(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
 	group, err := s.flake.Next()
 	if err != nil {
 		signal <- err
+		return
 	}
 
 	h := murmur3.New32()
@@ -45,11 +47,13 @@ func StartSender(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
 		_, err = randbo.New().Read(buf)
 		if err != nil {
 			signal <- err
+			return
 		}
 
 		sum, err := s.send(group, opts, buf)
 		if err != nil {
 			signal <- err
+			return
 		}
 
 		h.Write(sum)
