@@ -13,6 +13,7 @@ type Options struct {
 	Direction string  `short:"d" long:"direction" description:"Use rmq to send (-d in) or receive (-d out) messages" required:"true"`
 	Exchange  string  `short:"x" long:"exchange" description:"The exchange to send to (-d in) or bind a queue to when receiving (-d out)"`
 	Queue     string  `short:"q" long:"queue" description:"The queue to receive from (when used with -d in)"`
+	NoDeclare bool    `short:"n" long:"no-declare" description:"If set, then don't attempt to declare the queue or bind it" default:"false"`
 	Key       string  `short:"k" long:"key" description:"The key to use for routing (-d in) or for queue binding (-d out)"`
 	Count     int     `short:"c" long:"count" description:"The number of messages to send" default:"10"`
 	Interval  int     `short:"i" long:"interval" description:"The delay (in ms) between sending messages" default:"10"`

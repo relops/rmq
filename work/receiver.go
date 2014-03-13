@@ -17,10 +17,12 @@ func StartReceiver(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
 		signal <- err
 	}
 
-	_, err = declareQueue(c.ch, opts.Queue)
+	if !opts.NoDeclare {
+		_, err = declareQueue(c.ch, opts.Queue)
 
-	if err != nil {
-		signal <- err
+		if err != nil {
+			signal <- err
+		}
 	}
 
 	deliveries, err := subscribe(c.ch, opts.Queue)
