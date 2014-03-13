@@ -19,7 +19,7 @@ To receive messages from a queue:
 $ rmq -d out -q foo
 2014-12-03 10:53:57.024 - receiver connected to localhost
 2014-12-03 10:53:57.026 - receiver subscribed to queue: foo
-2014-12-03 10:53:59.813 - [290980845845254145] receiving 64 bytes (8bd39598)
+2014-12-03 10:53:59.813 - [290980845845254145] receiving 64 bytes (8bd39598) @ 0.81 ms
 ```
 
 Options
@@ -37,6 +37,7 @@ Application Options:
   -k, --key=       The key to use for routing (-d in) or for queue binding (-d out)
   -c, --count=     The number of messages to send (10)
   -i, --interval=  The delay (in ms) between sending messages (10)
+  -z, --size=      Message size in bytes (64)
   -u, --user=      The user to connect as (guest)
   -P, --pass=      The user's password (guest)
   -H, --host=      The Rabbit host to connect to (localhost)

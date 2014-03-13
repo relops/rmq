@@ -28,7 +28,7 @@ func StartSender(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
 
 	for i := 0; i < opts.Count; i++ {
 
-		buf := make([]byte, 64)
+		buf := make([]byte, opts.Size)
 		_, err = randbo.New().Read(buf)
 		if err != nil {
 			signal <- err
