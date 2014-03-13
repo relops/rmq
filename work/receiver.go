@@ -15,6 +15,7 @@ func StartReceiver(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
 
 	if err != nil {
 		signal <- err
+		return
 	}
 
 	if !opts.NoDeclare {
@@ -22,12 +23,14 @@ func StartReceiver(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
 
 		if err != nil {
 			signal <- err
+			return
 		}
 	}
 
 	deliveries, err := subscribe(c.ch, opts.Queue)
 	if err != nil {
 		signal <- err
+		return
 	}
 
 	log.Infof("receiver subscribed to queue: %s", opts.Queue)
