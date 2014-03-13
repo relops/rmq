@@ -44,6 +44,9 @@ func handle(deliveries <-chan amqp.Delivery, opts *Options, signal chan error) {
 	for d := range deliveries {
 
 		now := time.Now().UnixNano()
+		if err := d.Ack(false); err != nil {
+			signal <- err
+		}
 
 		h := murmur3.New32()
 		h.Write(d.Body)
