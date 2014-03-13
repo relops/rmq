@@ -56,6 +56,8 @@ func handle(deliveries <-chan amqp.Delivery, opts *Options, signal chan error) {
 		ent := e.Sum(nil)
 		entropy[d.CorrelationId] = e
 
+		size := float32(len(d.Body)) / 1024
+
 		var latency float64
 		ts, hasLatency := d.Headers[timestampHeader]
 		if hasLatency {
@@ -73,16 +75,16 @@ func handle(deliveries <-chan amqp.Delivery, opts *Options, signal chan error) {
 		if opts.Entropy {
 			label := shortLabel(d.CorrelationId)
 			if hasLatency {
-				log.Infof("[%s] receiving %d bytes (%x)\t%.2f ms [%s, %x]", d.MessageId, len(d.Body), sum, latency, label, ent)
+				log.Infof("[%s] receiving %.2f kB (%x) @ %.2f ms [%s, %x]", d.MessageId, size, sum, latency, label, ent)
 			} else {
-				log.Infof("[%s] receiving %d bytes (%x)\t[%s, %x]", d.MessageId, len(d.Body), sum, label, ent)
+				log.Infof("[%s] receiving %.2f kB (%x) [%s, %x]", d.MessageId, size, sum, label, ent)
 			}
 
 		} else {
 			if hasLatency {
-				log.Infof("[%s] receiving %d bytes\t(%x) in %.2f ms", d.MessageId, len(d.Body), sum, latency)
+				log.Infof("[%s] receiving %.2f kB (%x) @ %.2f ms", d.MessageId, size, sum, latency)
 			} else {
-				log.Infof("[%s] receiving %d bytes\t(%x)", d.MessageId, len(d.Body), sum)
+				log.Infof("[%s] receiving %.2f kB (%x)", d.MessageId, size, sum)
 			}
 
 		}

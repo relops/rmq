@@ -7,7 +7,6 @@ import (
 	"github.com/dustin/randbo"
 	"github.com/spaolacci/murmur3"
 	"github.com/streadway/amqp"
-	"math"
 	"math/rand"
 	"time"
 )
@@ -30,13 +29,16 @@ func StartSender(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	for i := 0; i < opts.Count; i++ {
-
-		size := opts.Size
+		sizeInKb := opts.Size * 1024
+		size := int(sizeInKb)
 		if opts.StdDev > 0 {
 			dev := float64(opts.StdDev)
-			mean := float64(opts.Size)
-			s := math.Abs(r.NormFloat64()*dev + mean)
-			size = int(math.Ceil(s))
+			s := r.NormFloat64()*dev*100 + sizeInKb
+			size = int(s)
+		}
+
+		if size == 0 {
+			size++
 		}
 
 		buf := make([]byte, size)
@@ -90,7 +92,8 @@ func (s *client) send(group uint64, x, key string, payload []byte) ([]byte, erro
 	h.Write(payload)
 	sum := h.Sum(nil)
 
-	log.Infof("[%d] sending %d bytes\t(%x)", id, len(payload), sum)
+	size := float32(len(payload)) / 1024
+	log.Infof("[%d] sending %.2f kB (%x)", id, size, sum)
 
 	return sum, nil
 }
