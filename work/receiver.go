@@ -1,11 +1,13 @@
 package work
 
 import (
+	"fmt"
 	"github.com/0x6e6562/gosnow"
 	log "github.com/cihub/seelog"
 	"github.com/spaolacci/murmur3"
 	"github.com/streadway/amqp"
 	"hash"
+	"time"
 )
 
 func StartReceiver(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
@@ -39,6 +41,8 @@ func handle(deliveries <-chan amqp.Delivery, opts *Options, signal chan error) {
 
 	for d := range deliveries {
 
+		now := time.Now().UnixNano()
+
 		h := murmur3.New32()
 		h.Write(d.Body)
 		sum := h.Sum(nil)
@@ -52,12 +56,25 @@ func handle(deliveries <-chan amqp.Delivery, opts *Options, signal chan error) {
 		ent := e.Sum(nil)
 		entropy[d.CorrelationId] = e
 
-		label := shortLabel(d.CorrelationId)
+		var latency float64
+		ts, hasLatency := d.Headers[timestampHeader]
+		if hasLatency {
+			then, ok := ts.(int64)
+			if !ok {
+				signal <- fmt.Errorf("Invalid nanos timestamp header: %+v", ts)
+			}
+
+			latency = float64((now - then)) / (1000 * 1000)
+			if latency < 0 {
+				log.Warnf("[%s] negative latency: %f (ms); sent at %d (nanos), received at %d (nanos)", d.MessageId, latency, then, now)
+			}
+		}
 
 		if opts.Entropy {
-			log.Infof("[%s] receiving %d bytes (%x) :: [%s, %x]", d.MessageId, len(d.Body), sum, label, ent)
+			label := shortLabel(d.CorrelationId)
+			log.Infof("[%s] receiving %d bytes (%x) @ %.2f ms :: [%s, %x]", d.MessageId, len(d.Body), sum, latency, label, ent)
 		} else {
-			log.Infof("[%s] receiving %d bytes (%x)", d.MessageId, len(d.Body), sum)
+			log.Infof("[%s] receiving %d bytes (%x) @ %.2f ms", d.MessageId, len(d.Body), sum, latency)
 		}
 
 	}

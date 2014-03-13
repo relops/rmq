@@ -65,6 +65,7 @@ func (s *client) send(group uint64, x, key string, payload []byte) ([]byte, erro
 		CorrelationId: groupString,
 		Body:          payload,
 		DeliveryMode:  amqp.Transient,
+		Headers:       amqp.Table{timestampHeader: time.Now().UnixNano()},
 	}
 
 	mandatory := false

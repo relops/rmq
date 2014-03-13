@@ -6,6 +6,10 @@ import (
 	"github.com/streadway/amqp"
 )
 
+const (
+	timestampHeader = "nanos"
+)
+
 type client struct {
 	con    *amqp.Connection
 	ch     *amqp.Channel
