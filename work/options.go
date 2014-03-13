@@ -17,6 +17,7 @@ type Options struct {
 	Count     int    `short:"c" long:"count" description:"The number of messages to send" default:"10"`
 	Interval  int    `short:"i" long:"interval" description:"The delay (in ms) between sending messages" default:"10"`
 	Size      int    `short:"z" long:"size" description:"Message size in bytes" default:"64"`
+	StdDev    int    `short:"t" long:"stddev" description:"Standard deviation of message size in %" default:"0"`
 	Username  string `short:"u" long:"user" description:"The user to connect as" default:"guest"`
 	Password  string `short:"P" long:"pass" description:"The user's password" default:"guest"`
 	Host      string `short:"H" long:"host" description:"The Rabbit host to connect to" default:"localhost"`
@@ -27,6 +28,12 @@ type Options struct {
 
 func (o *Options) Validate() error {
 	if o.Direction != "in" && o.Direction != "out" {
+		return ErrInvalidOptions
+	}
+	if o.Size < 1 {
+		return ErrInvalidOptions
+	}
+	if o.StdDev < 0 {
 		return ErrInvalidOptions
 	}
 	return nil
