@@ -1,5 +1,5 @@
 {
-	"ArtifactsDest": "downloads",
+	"ArtifactsDest": "build",
 	"Tasks": [
 		"xc"
 	],

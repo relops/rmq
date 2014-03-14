@@ -10,12 +10,13 @@ install:
 
 script:
   - go build
-  - goxc -pv=0.1.$TRAVIS_BUILD_NUMBER
+  - goxc -pv=0.2.$TRAVIS_BUILD_NUMBER
 
 deploy:
   provider: s3
   bucket: "rmq"
   skip_cleanup: true
+  local-dir: build
   secret_access_key:
     secure: Pox9zyDP9t65iEOM6DfFasGhshwlxEdiszn9NXYZadFsI/aSChAit8KSq7qhZ5LMxqDhV5mo7HVSaXHbUEVCipvr0MAKBzVSCPL0bjrAYBpccP4Ba4wOtaQGih/1riH8+YmcB8l0UtGSrLVaBTCqhc584NvfrvupGmLFla8NnL8=
   access_key_id:
