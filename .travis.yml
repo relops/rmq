@@ -3,9 +3,10 @@ language: go
 go:
   - 1.2
 
-install: 
+install:
+  - go get github.com/laher/goxc
+  - export PATH=$PATH:/home/travis/gopath/bin
   - go get -v ./...
 
 script:
-  - go get github.com/laher/goxc  
   - go build
