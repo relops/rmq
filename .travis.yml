@@ -10,3 +10,4 @@ install:
 
 script:
   - go build
+  - goxc -pv=0.1.1
