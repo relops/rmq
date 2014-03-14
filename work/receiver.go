@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/0x6e6562/gosnow"
 	log "github.com/cihub/seelog"
-	"github.com/relops/amqp"
 	"github.com/spaolacci/murmur3"
+	"github.com/streadway/amqp"
 	"hash"
 	"time"
 )

@@ -5,8 +5,8 @@ import (
 	"github.com/0x6e6562/gosnow"
 	log "github.com/cihub/seelog"
 	"github.com/dustin/randbo"
-	"github.com/relops/amqp"
 	"github.com/spaolacci/murmur3"
+	"github.com/streadway/amqp"
 	"math/rand"
 	"time"
 )

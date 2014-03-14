@@ -2,7 +2,7 @@ package work
 
 import (
 	"errors"
-	"github.com/relops/amqp"
+	"github.com/streadway/amqp"
 )
 
 var (
