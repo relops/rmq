@@ -1,0 +1,8 @@
+{
+	"ArtifactsDest": "downloads",
+	"Tasks": [
+		"xc"
+	],
+	"BuildConstraints": "darwin",
+	"ConfigVersion": "0.9"
+}
