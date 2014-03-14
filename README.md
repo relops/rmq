@@ -41,6 +41,7 @@ Application Options:
   -i, --interval=   The delay (in ms) between sending messages (10)
   -z, --size=       Message size in kB (1)
   -t, --stddev=     Standard deviation of message size (0)
+  -r, --renew       Automatically resubscribe when the server cancels a subscription (used for mirrored queues) (false)
   -u, --user=       The user to connect as (guest)
   -w, --pass=       The user's password (guest)
   -H, --host=       The Rabbit host to connect to (localhost)
