@@ -23,7 +23,7 @@ var logConfig = `
 var (
 	opts    work.Options
 	parser         = flags.NewParser(&opts, flags.Default)
-	VERSION string = "0.1.0"
+	VERSION string = "0.2.1"
 )
 
 func init() {
