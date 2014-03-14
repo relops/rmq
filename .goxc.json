@@ -3,6 +3,6 @@
 	"Tasks": [
 		"xc"
 	],
-	"BuildConstraints": "darwin",
+	"BuildConstraints": "linux,darwin",
 	"ConfigVersion": "0.9"
 }
