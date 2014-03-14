@@ -22,6 +22,18 @@ $ rmq -d out -q foo
 2014-12-03 10:53:59.813 - [290980845845254145] receiving 64 bytes (8bd39598) @ 0.81 ms
 ```
 
+Features
+--------
+
+* Send and receive messages to RabbitMQ from the command line
+* Send an arbitrary number of messages
+* Specify the average size and standard deviation of the messages to send
+* Crude send rate throttling
+* Use persistent messaging as an option
+* Prints latency metrics for round trip operations
+* Deep entropy analysis for sending and receiving messages
+* Optionally auto-re-subscribe to cancelled subscriptions (e.g. with mirrored queues)
+
 Options
 -------
 
