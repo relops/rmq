@@ -8,6 +8,9 @@ install:
   - export PATH=$PATH:/home/travis/gopath/bin
   - go get -v ./...
 
+before_script:
+  - openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in .goxc.local.json.enc -d -a -out .goxc.local.json
+
 script:
   - go build
   - goxc -pv=0.2.$TRAVIS_BUILD_NUMBER
@@ -21,3 +24,7 @@ deploy:
     secure: Pox9zyDP9t65iEOM6DfFasGhshwlxEdiszn9NXYZadFsI/aSChAit8KSq7qhZ5LMxqDhV5mo7HVSaXHbUEVCipvr0MAKBzVSCPL0bjrAYBpccP4Ba4wOtaQGih/1riH8+YmcB8l0UtGSrLVaBTCqhc584NvfrvupGmLFla8NnL8=
   access_key_id:
     secure: Tv7d9drf7UL81wU/m+aPgZQLQ/CLZPCGYNyy8zHRBPpAiuU4olTztdZ9Kksavnp9qLa5ct1gLkOcAFQZfygf8tq+CUeJ/menvQhJ5pmLhKXgVfzBRJH7sE1KTaZDTIzqmqqP4XaS8Puc9jg7qzgypZG780cbXaJfbiCA8LRPxVA=
+
+env:
+  global:
+    secure: "c0IpRbfLD3e/SQFKAh5MBqYsHNiCCfiMZizCdjw1UFJXlD0+tvlsw2OE0JNRsOvB7yuAyzLdD1Rjj1aM+6O6mUXD2hVJ9EuJpBHL4uGDNj4DTL4Xa8KaiVxI1b2gW1L/TBIn8di3DzFh3o/floFYcB6WvZnADzKgG6vrnzf/FvM="

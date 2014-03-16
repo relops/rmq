@@ -1,8 +1,16 @@
 {
 	"ArtifactsDest": "build",
 	"Tasks": [
-		"xc"
+		"xc", "package", "bintray"
 	],
-	"BuildConstraints": "linux,darwin",
-	"ConfigVersion": "0.9"
+	"BuildConstraints": "darwin,linux",
+	"ConfigVersion": "0.9",
+	"TaskSettings" : {
+        "bintray" : {
+            "package" : "rmq",
+            "subject": "relops",
+            "repository": "rmq",
+            "downloadspage": "bintray.md"
+        }
+    }
 }
