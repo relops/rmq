@@ -35,6 +35,18 @@ Features
 * Deep entropy analysis for sending and receiving messages
 * Optionally auto-re-subscribe to cancelled subscriptions (e.g. with mirrored queues)
 
+Installation
+------------
+
+On OSX you can use Homebrew to install rmq:
+
+  $ brew tap relops/homebrew-rmq
+  $ brew install rmq
+
+On Linux, you can download the binary: [![Download](https://api.bintray.com/packages/relops/rmq/rmq/images/download.png)](https://bintray.com/relops/rmq/rmq/_latestVersion)
+
+If your platform is not covered here, please get in touch and we can probably cross-compile it for you.
+
 Options
 -------
 
@@ -65,11 +77,6 @@ Application Options:
 Help Options:
   -h, --help       Show this help message
 ```
-
-Installation
-------------
-
-[![Download](https://api.bintray.com/packages/relops/rmq/rmq/images/download.png)](https://bintray.com/relops/rmq/rmq/_latestVersion)
 
 Roadmap
 -------
