@@ -40,8 +40,10 @@ Installation
 
 On OSX you can use Homebrew to install rmq:
 
-  $ brew tap relops/homebrew-rmq
-  $ brew install rmq
+```
+$ brew tap relops/homebrew-rmq
+$ brew install rmq
+```
 
 On Linux, you can download the binary: [![Download](https://api.bintray.com/packages/relops/rmq/rmq/images/download.png)](https://bintray.com/relops/rmq/rmq/_latestVersion)
 
