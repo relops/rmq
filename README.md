@@ -1,6 +1,7 @@
 `rmq` is a command line Swiss army knife for sending and receiving messages to and from RabbitMQ.
 
 [![Build Status](https://travis-ci.org/relops/rmq.png?branch=master)](https://travis-ci.org/relops/rmq)
+[![Download](https://api.bintray.com/packages/relops/rmq/rmq/images/download.png)](https://bintray.com/relops/rmq/rmq/_latestVersion)
 
 Example
 -------
@@ -68,15 +69,7 @@ Help Options:
 Installation
 ------------
 
-Right now rmq needs to be build from source as we don't yet distribute pre-built binaries, hopefully this situation will change.
-
-To build `rmq`, you need Go installed locally. Then just do a `go get`:
-
-```
-$ go get github.com/relops/rmq
-```
-
-This will put the `rmq` binary in $GOPATH/bin.
+[![Download](https://api.bintray.com/packages/relops/rmq/rmq/images/download.png)](https://bintray.com/relops/rmq/rmq/_latestVersion)
 
 Roadmap
 -------
