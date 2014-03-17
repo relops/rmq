@@ -27,7 +27,7 @@ var (
 )
 
 func init() {
-
+	opts.AdvertizedVersion = VERSION
 	opts.Version = printVersionAndExit
 
 	// We might want to make this overridable

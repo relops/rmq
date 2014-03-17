@@ -21,7 +21,9 @@ func newClient(opts *Options) (*client, error) {
 	var err error
 	s := client{}
 
-	s.con, err = amqp.Dial(opts.uri())
+	config := amqp.Config{Properties: amqp.Table{"product": "rmq", "version": opts.AdvertizedVersion}}
+
+	s.con, err = amqp.DialConfig(opts.uri(), config)
 	if err != nil {
 		return nil, err
 	}
