@@ -45,7 +45,7 @@ $ brew tap relops/homebrew-rmq
 $ brew install rmq
 ```
 
-On Linux, you can download the binary: [![Download](https://api.bintray.com/packages/relops/rmq/rmq/images/download.png)](https://bintray.com/relops/rmq/rmq/_latestVersion)
+On Linux and OSX, you can download the binary: [![Download](https://api.bintray.com/packages/relops/rmq/rmq/images/download.png)](https://bintray.com/relops/rmq/rmq/_latestVersion)
 
 If your platform is not covered here, please get in touch and we can probably cross-compile it for you.
 
