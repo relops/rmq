@@ -10,17 +10,17 @@ To send a random message to a queue:
 
 ```
 $ rmq -d in -c 1 -k foo
-2014-12-03 10:53:59.812 - sender connected to localhost
-2014-12-03 10:53:59.812 - [290980845845254145] sending 64 bytes (8bd39598)
+2014-27-03 02:36:08.673 - sender connected to localhost
+2014-27-03 02:36:08.674 - [296291375195656193] sending 1.00 kB (91f17fdc)
 ```
 
 To receive messages from a queue:
 
 ```
 $ rmq -d out -q foo
-2014-12-03 10:53:57.024 - receiver connected to localhost
-2014-12-03 10:53:57.026 - receiver subscribed to queue: foo
-2014-12-03 10:53:59.813 - [290980845845254145] receiving 64 bytes (8bd39598) @ 0.81 ms
+2014-27-03 02:35:54.500 - receiver connected to localhost
+2014-27-03 02:35:54.504 - receiver (fLnW) subscribed to queue foo (prefetch=0)
+2014-27-03 02:36:08.676 - [fLnW] 296291375195656193 receiving 1.00 kB (91f17fdc) @ 1.14 ms
 ```
 
 Features
@@ -31,7 +31,9 @@ Features
 * Specify the average size and standard deviation of the messages to send
 * Concurrent sending receiving in either separate AMQP connections or channels or both
 * Crude send rate throttling
+* Crude consumer latency simulation
 * Setting the prefetch length for consumers
+* Consumer tags can be used to correlate log output with RabbitMQ management
 * Use persistent messaging as an option
 * Prints latency metrics for round trip operations
 * Deep entropy analysis for sending and receiving messages
