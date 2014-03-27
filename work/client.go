@@ -12,23 +12,17 @@ const (
 
 type client struct {
 	con    *amqp.Connection
-	ch     *amqp.Channel
 	signal chan error
 	flake  *gosnow.SnowFlake
 }
 
-func newClient(opts *Options) (*client, error) {
+func NewClient(opts *Options, flake *gosnow.SnowFlake) (*client, error) {
 	var err error
-	s := client{}
+	s := client{flake: flake}
 
 	config := amqp.Config{Properties: amqp.Table{"product": "rmq", "version": opts.AdvertizedVersion}}
 
 	s.con, err = amqp.DialConfig(opts.uri(), config)
-	if err != nil {
-		return nil, err
-	}
-
-	s.ch, err = s.con.Channel()
 	if err != nil {
 		return nil, err
 	}
@@ -40,6 +34,10 @@ func newClient(opts *Options) (*client, error) {
 	log.Infof("%s connected to %s", direction, opts.Host)
 
 	return &s, err
+}
+
+func (c *client) openChannel() (*amqp.Channel, error) {
+	return c.con.Channel()
 }
 
 func shortLabel(c string) string {

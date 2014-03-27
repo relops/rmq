@@ -8,6 +8,7 @@ import (
 	"github.com/relops/rmq/work"
 	"os"
 	"strings"
+	"sync"
 )
 
 var logConfig = `
@@ -62,17 +63,38 @@ func main() {
 
 	signal := make(chan error)
 
-	if opts.IsSender() {
-		go work.StartSender(signal, flake, &opts)
-	} else {
-		go work.StartReceiver(signal, flake, &opts)
+	var wg sync.WaitGroup
+
+	for i := 0; i < (&opts).Connections; i++ {
+
+		c, err := work.NewClient(&opts, flake)
+		if err != nil {
+			log.Error(err)
+			os.Exit(1)
+		}
+
+		for i := 0; i < (&opts).Concurrency; i++ {
+
+			if opts.IsSender() {
+
+				wg.Add(1)
+				go work.StartSender(c, signal, &opts, &wg)
+
+			} else {
+				go work.StartReceiver(c, signal, &opts)
+			}
+
+		}
 	}
 
 	err = <-signal
 
 	if err != nil {
 		log.Error(err)
+		os.Exit(1)
 	}
+
+	wg.Wait()
 }
 
 func printVersionAndExit() {

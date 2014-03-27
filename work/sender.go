@@ -2,24 +2,22 @@ package work
 
 import (
 	"fmt"
-	"github.com/0x6e6562/gosnow"
 	log "github.com/cihub/seelog"
 	"github.com/dustin/randbo"
 	"github.com/spaolacci/murmur3"
 	"github.com/streadway/amqp"
 	"math/rand"
+	"sync"
 	"time"
 )
 
-func StartSender(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
-	s, err := newClient(opts)
+func StartSender(s *client, signal chan error, opts *Options, wg *sync.WaitGroup) {
 
+	ch, err := s.openChannel()
 	if err != nil {
 		signal <- err
 		return
 	}
-
-	s.flake = flake
 
 	group, err := s.flake.Next()
 	if err != nil {
@@ -50,7 +48,7 @@ func StartSender(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
 			return
 		}
 
-		sum, err := s.send(group, opts, buf)
+		sum, err := s.send(ch, group, opts, buf)
 		if err != nil {
 			signal <- err
 			return
@@ -65,10 +63,11 @@ func StartSender(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
 		log.Infof("[%d] sender entropy (%x)", group, h.Sum(nil))
 	}
 
+	wg.Done()
 	signal <- nil
 }
 
-func (s *client) send(group uint64, o *Options, payload []byte) ([]byte, error) {
+func (s *client) send(ch *amqp.Channel, group uint64, o *Options, payload []byte) ([]byte, error) {
 
 	id, err := s.flake.Next()
 	if err != nil {
@@ -92,7 +91,7 @@ func (s *client) send(group uint64, o *Options, payload []byte) ([]byte, error) 
 	mandatory := false
 	immediate := false
 
-	if err := s.ch.Publish(o.Exchange, o.Key, mandatory, immediate, envelope); err != nil {
+	if err := ch.Publish(o.Exchange, o.Key, mandatory, immediate, envelope); err != nil {
 		return nil, fmt.Errorf("Could not publish to exchange %s: %s", o.Exchange, err)
 	}
 

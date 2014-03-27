@@ -29,6 +29,7 @@ Features
 * Send and receive messages to RabbitMQ from the command line
 * Send an arbitrary number of messages
 * Specify the average size and standard deviation of the messages to send
+* Concurrent sending receiving in either separate AMQP connections or channels or both
 * Crude send rate throttling
 * Setting the prefetch length for consumers
 * Use persistent messaging as an option
@@ -59,24 +60,26 @@ Usage:
   rmq [OPTIONS]
 
 Application Options:
-  -d, --direction=  Use rmq to send (-d in) or receive (-d out) messages
-  -x, --exchange=   The exchange to send to (-d in) or bind a queue to when receiving (-d out)
-  -q, --queue=      The queue to receive from (when used with -d in)
-  -P, --persistent  Use persistent messaging (false)
-  -n, --no-declare  If set, then don't attempt to declare the queue or bind it (false)
-  -f, --prefetch=   The number of outstanding acks a receiver will be limited to, default of 0 means unbounded (0)
-  -k, --key=        The key to use for routing (-d in) or for queue binding (-d out)
-  -c, --count=      The number of messages to send (10)
-  -i, --interval=   The delay (in ms) between sending or receiving messages (0)
-  -z, --size=       Message size in kB (1)
-  -t, --stddev=     Standard deviation of message size (0)
-  -r, --renew       Automatically resubscribe when the server cancels a subscription (used for mirrored queues) (false)
-  -u, --user=       The user to connect as (guest)
-  -w, --pass=       The user's password (guest)
-  -H, --host=       The Rabbit host to connect to (localhost)
-  -p, --port=       The Rabbit port to connect on (5672)
-  -e, --entropy     Display message level entropy information (false)
-  -V, --version     Print rmq version and exit
+  -d, --direction=   Use rmq to send (-d in) or receive (-d out) messages
+  -x, --exchange=    The exchange to send to (-d in) or bind a queue to when receiving (-d out)
+  -q, --queue=       The queue to receive from (when used with -d in)
+  -P, --persistent   Use persistent messaging (false)
+  -n, --no-declare   If set, then don't attempt to declare the queue or bind it (false)
+  -f, --prefetch=    The number of outstanding acks a receiver will be limited to, default of 0 means unbounded (0)
+  -k, --key=         The key to use for routing (-d in) or for queue binding (-d out)
+  -c, --count=       The number of messages to send (10)
+  -i, --interval=    The delay (in ms) between sending or receiving messages (0)
+  -g, --concurrency= The number of processes per connection (1)
+  -m, --connections= The number of connections to use (1)
+  -z, --size=        Message size in kB (1)
+  -t, --stddev=      Standard deviation of message size (0)
+  -r, --renew        Automatically resubscribe when the server cancels a subscription (used for mirrored queues) (false)
+  -u, --user=        The user to connect as (guest)
+  -w, --pass=        The user's password (guest)
+  -H, --host=        The Rabbit host to connect to (localhost)
+  -p, --port=        The Rabbit port to connect on (5672)
+  -e, --entropy      Display message level entropy information (false)
+  -V, --version      Print rmq version and exit
 
 Help Options:
   -h, --help       Show this help message

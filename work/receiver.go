@@ -2,7 +2,6 @@ package work
 
 import (
 	"fmt"
-	"github.com/0x6e6562/gosnow"
 	log "github.com/cihub/seelog"
 	"github.com/dchest/uniuri"
 	"github.com/spaolacci/murmur3"
@@ -11,16 +10,16 @@ import (
 	"time"
 )
 
-func StartReceiver(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
-	c, err := newClient(opts)
+func StartReceiver(c *client, signal chan error, opts *Options) {
 
+	ch, err := c.openChannel()
 	if err != nil {
 		signal <- err
 		return
 	}
 
 	if !opts.NoDeclare {
-		_, err = declareQueue(c.ch, opts.Queue)
+		_, err := declareQueue(ch, opts.Queue)
 
 		if err != nil {
 			signal <- err
@@ -28,14 +27,14 @@ func StartReceiver(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
 		}
 	}
 
-	tag := uniuri.NewLen(6)
-	deliveries, err := subscribe(c.ch, opts.Queue, tag)
+	tag := uniuri.NewLen(4)
+	deliveries, err := subscribe(ch, opts.Queue, tag)
 	if err != nil {
 		signal <- err
 		return
 	}
 
-	if err := c.ch.Qos(opts.Prefetch, 0, false); err != nil {
+	if err := ch.Qos(opts.Prefetch, 0, false); err != nil {
 		signal <- err
 		return
 	}
@@ -46,14 +45,20 @@ func StartReceiver(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
 	go handle(deliveries, opts, tag, c.signal, cancelSubscription)
 
 	cancel := make(chan string, 1)
-	c.ch.NotifyCancel(cancel)
+	ch.NotifyCancel(cancel)
+
 	select {
 	case tag := <-cancel:
 		_ = tag
 		cancelSubscription <- true
 		if opts.Renew {
 			log.Info("automatically renewing subscription")
-			StartReceiver(signal, flake, opts)
+			c, err := NewClient(opts, c.flake)
+			if err != nil {
+				signal <- err
+				return
+			}
+			StartReceiver(c, signal, opts)
 		}
 	}
 
@@ -108,23 +113,23 @@ func handle(deliveries <-chan amqp.Delivery, opts *Options, tag string, signal c
 
 					latency = float64((now - then)) / (1000 * 1000)
 					if latency < 0 {
-						log.Warnf("[%s] negative latency: %f (ms); sent at %d (nanos), received at %d (nanos)", d.MessageId, latency, then, now)
+						log.Warnf("[%s] %s negative latency: %f (ms); sent at %d (nanos), received at %d (nanos)", tag, d.MessageId, latency, then, now)
 					}
 				}
 
 				if opts.Entropy {
 					label := shortLabel(d.CorrelationId)
 					if hasLatency {
-						log.Infof("[%s] receiving %.2f kB (%x) @ %.2f ms [%s, %x]", d.MessageId, size, sum, latency, label, ent)
+						log.Infof("[%s] %s receiving %.2f kB (%x) @ %.2f ms [%s, %x]", tag, d.MessageId, size, sum, latency, label, ent)
 					} else {
-						log.Infof("[%s] receiving %.2f kB (%x) [%s, %x]", d.MessageId, size, sum, label, ent)
+						log.Infof("[%s] %s receiving %.2f kB (%x) [%s, %x]", tag, d.MessageId, size, sum, label, ent)
 					}
 
 				} else {
 					if hasLatency {
-						log.Infof("[%s] receiving %.2f kB (%x) @ %.2f ms", d.MessageId, size, sum, latency)
+						log.Infof("[%s] %s receiving %.2f kB (%x) @ %.2f ms", tag, d.MessageId, size, sum, latency)
 					} else {
-						log.Infof("[%s] receiving %.2f kB (%x)", d.MessageId, size, sum)
+						log.Infof("[%s] %s receiving %.2f kB (%x)", tag, d.MessageId, size, sum)
 					}
 
 				}
