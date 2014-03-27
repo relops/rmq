@@ -33,7 +33,12 @@ func StartReceiver(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
 		return
 	}
 
-	log.Infof("receiver subscribed to queue: %s", opts.Queue)
+	if err := c.ch.Qos(opts.Prefetch, 0, false); err != nil {
+		signal <- err
+		return
+	}
+
+	log.Infof("receiver subscribed to queue %s (prefetch=%d) ", opts.Queue, opts.Prefetch)
 
 	cancelSubscription := make(chan bool)
 	go handle(deliveries, opts, c.signal, cancelSubscription)
@@ -67,6 +72,11 @@ func handle(deliveries <-chan amqp.Delivery, opts *Options, signal chan error, c
 			for d := range deliveries {
 
 				now := time.Now().UnixNano()
+
+				if opts.Interval > 0 {
+					time.Sleep(time.Duration(opts.Interval) * time.Millisecond)
+				}
+
 				if err := d.Ack(false); err != nil {
 					signal <- err
 				}

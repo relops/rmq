@@ -30,6 +30,7 @@ Features
 * Send an arbitrary number of messages
 * Specify the average size and standard deviation of the messages to send
 * Crude send rate throttling
+* Setting the prefetch length for consumers
 * Use persistent messaging as an option
 * Prints latency metrics for round trip operations
 * Deep entropy analysis for sending and receiving messages
@@ -63,9 +64,10 @@ Application Options:
   -q, --queue=      The queue to receive from (when used with -d in)
   -P, --persistent  Use persistent messaging (false)
   -n, --no-declare  If set, then don't attempt to declare the queue or bind it (false)
+  -f, --prefetch=   The number of outstanding acks a receiver will be limited to, default of 0 means unbounded (0)
   -k, --key=        The key to use for routing (-d in) or for queue binding (-d out)
   -c, --count=      The number of messages to send (10)
-  -i, --interval=   The delay (in ms) between sending messages (10)
+  -i, --interval=   The delay (in ms) between sending or receiving messages (0)
   -z, --size=       Message size in kB (1)
   -t, --stddev=     Standard deviation of message size (0)
   -r, --renew       Automatically resubscribe when the server cancels a subscription (used for mirrored queues) (false)

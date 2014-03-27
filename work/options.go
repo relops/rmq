@@ -15,9 +15,10 @@ type Options struct {
 	Queue             string  `short:"q" long:"queue" description:"The queue to receive from (when used with -d in)"`
 	Persistent        bool    `short:"P" long:"persistent" description:"Use persistent messaging" default:"false"`
 	NoDeclare         bool    `short:"n" long:"no-declare" description:"If set, then don't attempt to declare the queue or bind it" default:"false"`
+	Prefetch          int     `short:"f" long:"prefetch" description:"The number of outstanding acks a receiver will be limited to, default of 0 means unbounded" default:"0"`
 	Key               string  `short:"k" long:"key" description:"The key to use for routing (-d in) or for queue binding (-d out)"`
 	Count             int     `short:"c" long:"count" description:"The number of messages to send" default:"10"`
-	Interval          int     `short:"i" long:"interval" description:"The delay (in ms) between sending messages" default:"10"`
+	Interval          int     `short:"i" long:"interval" description:"The delay (in ms) between sending or receiving messages" default:"0"`
 	Size              float64 `short:"z" long:"size" description:"Message size in kB" default:"1"`
 	StdDev            int     `short:"t" long:"stddev" description:"Standard deviation of message size" default:"0"`
 	Renew             bool    `short:"r" long:"renew" description:"Automatically resubscribe when the server cancels a subscription (used for mirrored queues)" default:"false"`
