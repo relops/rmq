@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/0x6e6562/gosnow"
 	log "github.com/cihub/seelog"
+	"github.com/dchest/uniuri"
 	"github.com/spaolacci/murmur3"
 	"github.com/streadway/amqp"
 	"hash"
@@ -27,7 +28,8 @@ func StartReceiver(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
 		}
 	}
 
-	deliveries, err := subscribe(c.ch, opts.Queue)
+	tag := uniuri.NewLen(6)
+	deliveries, err := subscribe(c.ch, opts.Queue, tag)
 	if err != nil {
 		signal <- err
 		return
@@ -38,10 +40,10 @@ func StartReceiver(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
 		return
 	}
 
-	log.Infof("receiver subscribed to queue %s (prefetch=%d) ", opts.Queue, opts.Prefetch)
+	log.Infof("receiver (%s) subscribed to queue %s (prefetch=%d) ", tag, opts.Queue, opts.Prefetch)
 
 	cancelSubscription := make(chan bool)
-	go handle(deliveries, opts, c.signal, cancelSubscription)
+	go handle(deliveries, opts, tag, c.signal, cancelSubscription)
 
 	cancel := make(chan string, 1)
 	c.ch.NotifyCancel(cancel)
@@ -58,7 +60,7 @@ func StartReceiver(signal chan error, flake *gosnow.SnowFlake, opts *Options) {
 	signal <- nil
 }
 
-func handle(deliveries <-chan amqp.Delivery, opts *Options, signal chan error, cancelSubscription chan bool) {
+func handle(deliveries <-chan amqp.Delivery, opts *Options, tag string, signal chan error, cancelSubscription chan bool) {
 
 	// TODO This could consume a lot of memory if not LRU'ed
 	entropy := make(map[string]hash.Hash)
@@ -134,14 +136,14 @@ func handle(deliveries <-chan amqp.Delivery, opts *Options, signal chan error, c
 	signal <- nil
 }
 
-func subscribe(ch *amqp.Channel, queue string) (<-chan amqp.Delivery, error) {
+func subscribe(ch *amqp.Channel, queue, tag string) (<-chan amqp.Delivery, error) {
 	autoAck := false
 	exclusive := false
 	noLocal := false
 	noWait := false
 	var args amqp.Table
 
-	return ch.Consume(queue, "", autoAck, exclusive, noLocal, noWait, args)
+	return ch.Consume(queue, tag, autoAck, exclusive, noLocal, noWait, args)
 }
 
 func declareQueue(ch *amqp.Channel, name string) (amqp.Queue, error) {
