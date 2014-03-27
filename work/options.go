@@ -10,7 +10,7 @@ var (
 )
 
 type Options struct {
-	Direction         string  `short:"d" long:"direction" description:"Use rmq to send (-d in) or receive (-d out) messages" required:"true"`
+	Direction         string  `short:"d" long:"direction" description:"Use rmq to send (-d in) or receive (-d out) messages"`
 	Exchange          string  `short:"x" long:"exchange" description:"The exchange to send to (-d in) or bind a queue to when receiving (-d out)"`
 	Queue             string  `short:"q" long:"queue" description:"The queue to receive from (when used with -d in)"`
 	Persistent        bool    `short:"P" long:"persistent" description:"Use persistent messaging" default:"false"`
@@ -34,8 +34,10 @@ type Options struct {
 }
 
 func (o *Options) Validate() error {
-	if o.Direction != "in" && o.Direction != "out" {
-		return ErrInvalidOptions
+	if len(o.Direction) > 0 {
+		if o.Direction != "in" && o.Direction != "out" {
+			return ErrInvalidOptions
+		}
 	}
 	if o.Size < 1 {
 		return ErrInvalidOptions

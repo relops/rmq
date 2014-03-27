@@ -5,6 +5,7 @@ import (
 	"github.com/0x6e6562/gosnow"
 	log "github.com/cihub/seelog"
 	"github.com/jessevdk/go-flags"
+	"github.com/michaelklishin/rabbit-hole"
 	"github.com/relops/rmq/work"
 	"os"
 	"strings"
@@ -53,6 +54,12 @@ func main() {
 	if err := opts.Validate(); err != nil {
 		parser.WriteHelp(os.Stderr)
 		os.Exit(1)
+	}
+
+	if len(os.Args) < 2 {
+		rmqc, _ := rabbithole.NewClient("http://127.0.0.1:15672", "guest", "guest")
+		work.Info(rmqc)
+		os.Exit(0)
 	}
 
 	flake, err := gosnow.NewSnowFlake(201)
