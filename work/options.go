@@ -19,6 +19,7 @@ type Options struct {
 	Key               string  `short:"k" long:"key" description:"The key to use for routing (-d in) or for queue binding (-d out)"`
 	Count             int     `short:"c" long:"count" description:"The number of messages to send" default:"10"`
 	Interval          int     `short:"i" long:"interval" description:"The delay (in ms) between sending or receiving messages" default:"0"`
+	Info              bool    `short:"I" long:"info" description:"If set, print basic server info (requires management API to be installed on the server)" default:"false"`
 	Concurrency       int     `short:"g" long:"concurrency" description:"The number of processes per connection" default:"1"`
 	Connections       int     `short:"m" long:"connections" description:"The number of connections to use" default:"1"`
 	Size              float64 `short:"z" long:"size" description:"Message size in kB" default:"1"`

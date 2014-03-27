@@ -56,7 +56,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if len(os.Args) < 2 {
+	if opts.Info {
 		rmqc, _ := rabbithole.NewClient("http://127.0.0.1:15672", "guest", "guest")
 		work.Info(rmqc)
 		os.Exit(0)

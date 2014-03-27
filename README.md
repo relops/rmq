@@ -23,6 +23,12 @@ $ rmq -d out -q foo
 2014-27-03 02:36:08.676 - [fLnW] 296291375195656193 receiving 1.00 kB (91f17fdc) @ 1.14 ms
 ```
 
+To get (very) basic info about the server:
+```
+$ rmq -I
+RabbitMQ Server 3.2.4
+```
+
 Features
 --------
 
@@ -71,6 +77,7 @@ Application Options:
   -k, --key=         The key to use for routing (-d in) or for queue binding (-d out)
   -c, --count=       The number of messages to send (10)
   -i, --interval=    The delay (in ms) between sending or receiving messages (0)
+  -I, --info         If set, print basic server info (requires management API to be installed on the server) (false)
   -g, --concurrency= The number of processes per connection (1)
   -m, --connections= The number of connections to use (1)
   -z, --size=        Message size in kB (1)
