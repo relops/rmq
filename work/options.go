@@ -51,6 +51,11 @@ func (o *Options) Validate() error {
 	if o.StdDev < 0 {
 		return ErrInvalidOptions
 	}
+
+	if len(o.Direction) == 0 && !o.UsesMgmt() {
+		return ErrInvalidOptions
+	}
+
 	return nil
 }
 

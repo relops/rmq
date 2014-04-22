@@ -64,13 +64,12 @@ func main() {
 
 		if opts.Info {
 			work.Info(rmqc)
-			os.Exit(0)
 		}
 
 		if len(opts.QueueInfo) > 0 {
 			work.Queues(rmqc)
-			os.Exit(0)
 		}
+		os.Exit(0)
 	}
 
 	flake, err := gosnow.NewSnowFlake(201)
@@ -108,11 +107,25 @@ func main() {
 	err = <-signal
 
 	if err != nil {
-		log.Error(err)
+		if shouldLogError(err) {
+			log.Error(err)
+		}
 		os.Exit(1)
 	}
 
 	wg.Wait()
+}
+
+func shouldLogError(err error) bool {
+
+	if strings.Contains(err.Error(), "PRECONDITION_FAILED") {
+		log.Error(err)
+		log.Info("Potential attempt to redeclare an existing queue - to avoid this, use the -n option")
+		return false
+	}
+
+	return true
+
 }
 
 func printVersionAndExit() {
