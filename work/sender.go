@@ -100,7 +100,12 @@ func (s *client) send(ch *amqp.Channel, group uint64, o *Options, payload []byte
 	sum := h.Sum(nil)
 
 	size := float32(len(payload)) / 1024
-	log.Infof("[%d] sending %.2f kB (%x)", id, size, sum)
+
+	if len(o.Verbose) > 0 {
+		log.Infof("[%d] sending %.2f kB (%x) to %s", id, size, sum, o.Key)
+	} else {
+		log.Infof("[%d] sending %.2f kB (%x)", id, size, sum)
+	}
 
 	return sum, nil
 }

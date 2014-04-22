@@ -1,12 +1,8 @@
 package work
 
 import (
-	"errors"
+	"fmt"
 	"github.com/streadway/amqp"
-)
-
-var (
-	ErrInvalidOptions = errors.New("invalid options")
 )
 
 type Options struct {
@@ -32,6 +28,7 @@ type Options struct {
 	Port              int     `short:"p" long:"port" description:"The Rabbit port to connect on" default:"5672"`
 	Entropy           bool    `short:"e" long:"entropy" description:"Display message level entropy information" default:"false"`
 	Version           func()  `short:"V" long:"version" description:"Print rmq version and exit"`
+	Verbose           []bool  `short:"v" long:"verbose" description:"Show verbose debug information"`
 	AdvertizedVersion string
 }
 
@@ -42,18 +39,37 @@ func (o *Options) UsesMgmt() bool {
 func (o *Options) Validate() error {
 	if len(o.Direction) > 0 {
 		if o.Direction != "in" && o.Direction != "out" {
-			return ErrInvalidOptions
+			return fmt.Errorf("Invalid argument: Illegal direction: %s (must be either 'in' or 'out')", o.Direction)
 		}
 	}
+
+	if o.Direction == "in" {
+		if len(o.Queue) > 0 {
+			return fmt.Errorf("Invalid argument: Should not specify a queue on ingress")
+		}
+		if len(o.Key) < 1 {
+			return fmt.Errorf("Invalid argument: Empty routing key")
+		}
+	}
+
+	if o.Direction == "out" {
+		if len(o.Key) > 0 {
+			return fmt.Errorf("Invalid argument: Should not specify a routing key on egress")
+		}
+		if len(o.Queue) < 1 {
+			return fmt.Errorf("Invalid argument: Empty queue name")
+		}
+	}
+
 	if o.Size < 1 {
-		return ErrInvalidOptions
+		return fmt.Errorf("Invalid argument: Illegal message size: %f", o.Size)
 	}
 	if o.StdDev < 0 {
-		return ErrInvalidOptions
+		return fmt.Errorf("Invalid argument: Negative standard deviation: %d", o.StdDev)
 	}
 
 	if len(o.Direction) == 0 && !o.UsesMgmt() {
-		return ErrInvalidOptions
+		return fmt.Errorf("Invalid argument: cannot use management and messaging in the same command")
 	}
 
 	return nil

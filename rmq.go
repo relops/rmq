@@ -46,15 +46,12 @@ func init() {
 func main() {
 
 	if _, err := parser.Parse(); err != nil {
-		if !strings.Contains(err.Error(), "Usage:") && !strings.Contains(err.Error(), "direction") {
-			fmt.Fprintf(os.Stderr, "Initialization error: %s\n", err)
-		}
-		os.Exit(1)
+		os.Exit(0)
 	}
 
 	if err := opts.Validate(); err != nil {
-		parser.WriteHelp(os.Stderr)
-		os.Exit(1)
+		fmt.Printf("%v\n", err)
+		os.Exit(0)
 	}
 
 	if opts.UsesMgmt() {
