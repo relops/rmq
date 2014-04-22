@@ -34,12 +34,12 @@ func StartReceiver(c *client, signal chan error, opts *Options) {
 		return
 	}
 
-	if err := ch.Qos(opts.Prefetch, 0, false); err != nil {
+	if err := ch.Qos(opts.Prefetch, 0, opts.GlobalPrefetch); err != nil {
 		signal <- err
 		return
 	}
 
-	log.Infof("receiver (%s) subscribed to queue %s (prefetch=%d) ", tag, opts.Queue, opts.Prefetch)
+	log.Infof("receiver (%s) subscribed to queue %s (prefetch=%d; global=%v) ", tag, opts.Queue, opts.Prefetch, opts.GlobalPrefetch)
 
 	cancelSubscription := make(chan bool)
 	go handle(deliveries, opts, tag, c.signal, cancelSubscription)
