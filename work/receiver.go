@@ -27,14 +27,14 @@ func StartReceiver(c *client, signal chan error, opts *Options) {
 		}
 	}
 
-	tag := uniuri.NewLen(4)
-	deliveries, err := subscribe(ch, opts.Queue, tag)
-	if err != nil {
+	if err := ch.Qos(opts.Prefetch, 0, opts.GlobalPrefetch); err != nil {
 		signal <- err
 		return
 	}
 
-	if err := ch.Qos(opts.Prefetch, 0, opts.GlobalPrefetch); err != nil {
+	tag := uniuri.NewLen(4)
+	deliveries, err := subscribe(ch, opts.Queue, tag)
+	if err != nil {
 		signal <- err
 		return
 	}
