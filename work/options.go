@@ -10,6 +10,7 @@ var (
 )
 
 type Options struct {
+	QueueInfo         string  `short:"Q" long:"queue-info" description:"List queues" optional:"true" optional-value:"*"`
 	Direction         string  `short:"d" long:"direction" description:"Use rmq to send (-d in) or receive (-d out) messages"`
 	Exchange          string  `short:"x" long:"exchange" description:"The exchange to send to (-d in) or bind a queue to when receiving (-d out)"`
 	Queue             string  `short:"q" long:"queue" description:"The queue to receive from (when used with -d in)"`
@@ -32,6 +33,10 @@ type Options struct {
 	Entropy           bool    `short:"e" long:"entropy" description:"Display message level entropy information" default:"false"`
 	Version           func()  `short:"V" long:"version" description:"Print rmq version and exit"`
 	AdvertizedVersion string
+}
+
+func (o *Options) UsesMgmt() bool {
+	return o.Info || len(o.QueueInfo) > 0
 }
 
 func (o *Options) Validate() error {

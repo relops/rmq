@@ -44,6 +44,7 @@ func init() {
 }
 
 func main() {
+
 	if _, err := parser.Parse(); err != nil {
 		if !strings.Contains(err.Error(), "Usage:") && !strings.Contains(err.Error(), "direction") {
 			fmt.Fprintf(os.Stderr, "Initialization error: %s\n", err)
@@ -56,10 +57,20 @@ func main() {
 		os.Exit(1)
 	}
 
-	if opts.Info {
+	if opts.UsesMgmt() {
+
+		// TODO make more configurable
 		rmqc, _ := rabbithole.NewClient("http://127.0.0.1:15672", "guest", "guest")
-		work.Info(rmqc)
-		os.Exit(0)
+
+		if opts.Info {
+			work.Info(rmqc)
+			os.Exit(0)
+		}
+
+		if len(opts.QueueInfo) > 0 {
+			work.Queues(rmqc)
+			os.Exit(0)
+		}
 	}
 
 	flake, err := gosnow.NewSnowFlake(201)
