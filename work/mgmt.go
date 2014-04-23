@@ -17,6 +17,24 @@ func Info(rmqc *rabbithole.Client) {
 	fmt.Printf("RabbitMQ Server %s\n", o.RabbitMQVersion)
 }
 
+func DeleteQueue(rmqc *rabbithole.Client, queue string) {
+	res, err := rmqc.DeleteQueue("/", queue)
+	if err != nil {
+		log.Errorf("Could not initialize management interface: %s", err)
+		os.Exit(1)
+	}
+
+	switch res.StatusCode {
+	case 204:
+		fmt.Printf("Deleted %s\n", queue)
+	case 404:
+		fmt.Printf("Queue %s not found\n", queue)
+	default:
+		fmt.Printf("Could not complete operation on queue %s, status %d\n", queue, res.StatusCode)
+	}
+
+}
+
 func Queues(rmqc *rabbithole.Client) {
 
 	qs, err := rmqc.ListQueues()

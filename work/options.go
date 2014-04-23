@@ -13,10 +13,12 @@ type Options struct {
 	Persistent        bool    `short:"P" long:"persistent" description:"Use persistent messaging" default:"false"`
 	NoDeclare         bool    `short:"n" long:"no-declare" description:"If set, then don't attempt to declare the queue or bind it" default:"false"`
 	Prefetch          int     `short:"f" long:"prefetch" description:"The number of outstanding acks a receiver will be limited to, default of 0 means unbounded" default:"0"`
+	Priority          int32   `short:"y" long:"priority" description:"The relative priority for receiving messages" default:"0"`
 	GlobalPrefetch    bool    `short:"G" long:"global-prefetch" description:"Whether to share the prefetch limit accross all consumers of a channel" default:"false"`
 	Key               string  `short:"k" long:"key" description:"The key to use for routing (-d in) or for queue binding (-d out)"`
 	Count             int     `short:"c" long:"count" description:"The number of messages to send" default:"10"`
 	Interval          int     `short:"i" long:"interval" description:"The delay (in ms) between sending or receiving messages" default:"0"`
+	Delete            bool    `short:"D" long:"delete" description:"If set, it will remove the queue specified by the -q argument" default:"false"`
 	Info              bool    `short:"I" long:"info" description:"If set, print basic server info (requires management API to be installed on the server)" default:"false"`
 	Concurrency       int     `short:"g" long:"concurrency" description:"The number of processes per connection" default:"1"`
 	Connections       int     `short:"m" long:"connections" description:"The number of connections to use" default:"1"`
@@ -34,7 +36,7 @@ type Options struct {
 }
 
 func (o *Options) UsesMgmt() bool {
-	return o.Info || len(o.QueueInfo) > 0
+	return o.Info || len(o.QueueInfo) > 0 || o.Delete
 }
 
 func (o *Options) Validate() error {
@@ -69,7 +71,7 @@ func (o *Options) Validate() error {
 		return fmt.Errorf("Invalid argument: Negative standard deviation: %d", o.StdDev)
 	}
 
-	if len(o.Direction) == 0 && !o.UsesMgmt() {
+	if len(o.Direction) > 0 && o.UsesMgmt() {
 		return fmt.Errorf("Invalid argument: cannot use management and messaging in the same command")
 	}
 

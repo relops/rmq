@@ -61,10 +61,12 @@ func main() {
 
 		if opts.Info {
 			work.Info(rmqc)
-		}
-
-		if len(opts.QueueInfo) > 0 {
+		} else if opts.Delete && len(opts.Queue) > 0 {
+			work.DeleteQueue(rmqc, opts.Queue)
+		} else if len(opts.QueueInfo) > 0 {
 			work.Queues(rmqc)
+		} else {
+			fmt.Println("Unspecified management command")
 		}
 		os.Exit(0)
 	}

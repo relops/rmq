@@ -33,13 +33,13 @@ func StartReceiver(c *client, signal chan error, opts *Options) {
 	}
 
 	tag := uniuri.NewLen(4)
-	deliveries, err := subscribe(ch, opts.Queue, tag)
+	deliveries, err := subscribe(ch, opts, tag)
 	if err != nil {
 		signal <- err
 		return
 	}
 
-	log.Infof("receiver (%s) subscribed to queue %s (prefetch=%d; global=%v) ", tag, opts.Queue, opts.Prefetch, opts.GlobalPrefetch)
+	log.Infof("receiver (%s) subscribed to queue %s (prefetch=%d; global=%v; priority=%d) ", tag, opts.Queue, opts.Prefetch, opts.GlobalPrefetch, opts.Priority)
 
 	cancelSubscription := make(chan bool)
 	go handle(deliveries, opts, tag, c.signal, cancelSubscription)
@@ -141,14 +141,19 @@ func handle(deliveries <-chan amqp.Delivery, opts *Options, tag string, signal c
 	signal <- nil
 }
 
-func subscribe(ch *amqp.Channel, queue, tag string) (<-chan amqp.Delivery, error) {
+func subscribe(ch *amqp.Channel, o *Options, tag string) (<-chan amqp.Delivery, error) {
 	autoAck := false
 	exclusive := false
 	noLocal := false
 	noWait := false
 	var args amqp.Table
 
-	return ch.Consume(queue, tag, autoAck, exclusive, noLocal, noWait, args)
+	if o.Priority > 0 {
+		args = amqp.Table{}
+		args["x-priority"] = o.Priority
+	}
+
+	return ch.Consume(o.Queue, tag, autoAck, exclusive, noLocal, noWait, args)
 }
 
 func declareQueue(ch *amqp.Channel, name string) (amqp.Queue, error) {
