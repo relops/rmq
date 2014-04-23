@@ -27,6 +27,17 @@ func NewClient(opts *Options, flake *gosnow.SnowFlake) (*client, error) {
 		return nil, err
 	}
 
+	blockings := s.con.NotifyBlocked(make(chan amqp.Blocking))
+	go func() {
+		for b := range blockings {
+			if b.Active {
+				log.Warnf("Connection blocked: %q", b.Reason)
+			} else {
+				log.Warn("Connection unblocked")
+			}
+		}
+	}()
+
 	direction := "receiver"
 	if opts.IsSender() {
 		direction = "sender"
