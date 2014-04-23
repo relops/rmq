@@ -57,14 +57,21 @@ func main() {
 	if opts.UsesMgmt() {
 
 		// TODO make more configurable
-		rmqc, _ := rabbithole.NewClient("http://127.0.0.1:15672", "guest", "guest")
+		url := fmt.Sprintf("http://%s:%d", opts.Host, opts.MgmtPort)
+		rmqc, _ := rabbithole.NewClient(url, opts.Username, opts.Password)
 
 		if opts.Info {
 			work.Info(rmqc)
 		} else if opts.Delete && len(opts.Queue) > 0 {
 			work.DeleteQueue(rmqc, opts.Queue)
-		} else if len(opts.QueueInfo) > 0 {
+		} else if len(opts.QueueInfo) > 0 && len(opts.HA) == 0 {
 			work.Queues(rmqc)
+		} else if opts.Delete && len(opts.HAName) > 0 {
+			work.DeleteMirror(rmqc, opts.HAName)
+		} else if len(opts.HAName) > 0 && len(opts.Queue) > 0 {
+			work.CreateMirror(rmqc, opts.HAName, opts.Queue, opts.Replication, int(opts.Priority), opts.Nodes...)
+		} else if len(opts.HA) > 0 {
+			work.Mirroring(rmqc)
 		} else {
 			fmt.Println("Unspecified management command")
 		}

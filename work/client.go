@@ -53,5 +53,5 @@ func (c *client) openChannel() (*amqp.Channel, error) {
 
 func shortLabel(c string) string {
 	l := len(c)
-	return c[l-7 : l-1]
+	return c[l-7 : l]
 }
