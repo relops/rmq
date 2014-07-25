@@ -38,6 +38,9 @@ type Options struct {
 	Version           func()   `short:"V" long:"version" description:"Print rmq version and exit"`
 	Verbose           []bool   `short:"v" long:"verbose" description:"Show verbose debug information"`
 	AdvertizedVersion string
+	Args              struct {
+		MessageBody []string
+	} `positional-args:"yes" required:"yes"`
 }
 
 func (o *Options) UsesMgmt() bool {

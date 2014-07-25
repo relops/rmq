@@ -24,8 +24,7 @@ var logConfig = `
 
 var (
 	opts    work.Options
-	parser         = flags.NewParser(&opts, flags.Default)
-	VERSION string = "0.2.1"
+	VERSION string = "0.2.52"
 )
 
 func init() {
@@ -45,7 +44,7 @@ func init() {
 
 func main() {
 
-	if _, err := parser.Parse(); err != nil {
+	if _, err := flags.Parse(&opts); err != nil {
 		os.Exit(0)
 	}
 

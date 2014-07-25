@@ -1,12 +1,14 @@
 package work
 
 import (
+	"encoding/json"
 	"fmt"
 	log "github.com/cihub/seelog"
 	"github.com/dustin/randbo"
 	"github.com/spaolacci/murmur3"
 	"github.com/streadway/amqp"
 	"math/rand"
+	"strings"
 	"sync"
 	"time"
 )
@@ -26,29 +28,25 @@ func StartSender(s *client, signal chan error, opts *Options, wg *sync.WaitGroup
 	}
 
 	h := murmur3.New32()
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	for i := 0; i < opts.Count; i++ {
-		sizeInKb := opts.Size * 1024
-		size := int(sizeInKb)
-		if opts.StdDev > 0 {
-			dev := float64(opts.StdDev)
-			s := r.NormFloat64()*dev*100 + sizeInKb
-			size = int(s)
+	if len(opts.Args.MessageBody) > 0 {
+
+		m := make(map[string]string)
+		for _, kv := range opts.Args.MessageBody {
+			s := strings.SplitN(kv, "=", 2)
+			if len(s) == 1 {
+				m[s[0]] = ""
+			} else {
+				m[s[0]] = s[1]
+			}
 		}
-
-		if size == 0 {
-			size++
-		}
-
-		buf := make([]byte, size)
-		_, err = randbo.New().Read(buf)
+		encoded, err := json.Marshal(m)
 		if err != nil {
 			signal <- err
 			return
 		}
 
-		sum, err := s.send(ch, group, opts, buf)
+		sum, err := s.send(ch, group, opts, encoded)
 		if err != nil {
 			signal <- err
 			return
@@ -56,7 +54,40 @@ func StartSender(s *client, signal chan error, opts *Options, wg *sync.WaitGroup
 
 		h.Write(sum)
 
-		time.Sleep(time.Duration(opts.Interval) * time.Millisecond)
+	} else {
+
+		r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+		for i := 0; i < opts.Count; i++ {
+			sizeInKb := opts.Size * 1024
+			size := int(sizeInKb)
+			if opts.StdDev > 0 {
+				dev := float64(opts.StdDev)
+				s := r.NormFloat64()*dev*100 + sizeInKb
+				size = int(s)
+			}
+
+			if size == 0 {
+				size++
+			}
+
+			buf := make([]byte, size)
+			_, err = randbo.New().Read(buf)
+			if err != nil {
+				signal <- err
+				return
+			}
+
+			sum, err := s.send(ch, group, opts, buf)
+			if err != nil {
+				signal <- err
+				return
+			}
+
+			h.Write(sum)
+
+			time.Sleep(time.Duration(opts.Interval) * time.Millisecond)
+		}
 	}
 
 	if opts.Entropy {
