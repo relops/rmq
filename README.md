@@ -23,13 +23,15 @@ $ rmq -d out -q foo
 2014-27-03 02:36:08.676 - [fLnW] 296291375195656193 receiving 1.00 kB (91f17fdc) @ 1.14 ms
 ```
 
-To send a JSON message to a queue using command line arguments (space separated key value pairs delimited by `=`):
+To send a JSON message to a queue using command line arguments:
 
 ```
 $ rmq -d in -c 1 -k foo foo=x bar=y
 2014-25-07 11:13:58.594 - sender connected to 127.0.0.1
 2014-25-07 11:13:58.595 - [339711942334386177] sending 0.02 kB (eb07f4ad)
 ```
+
+The space separated key value pairs are delimited by an `=` sign. 
 
 To get (very) basic info about the server:
 ```
