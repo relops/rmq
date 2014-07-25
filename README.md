@@ -79,30 +79,43 @@ Usage:
   rmq [OPTIONS]
 
 Application Options:
-  -d, --direction=   Use rmq to send (-d in) or receive (-d out) messages
-  -x, --exchange=    The exchange to send to (-d in) or bind a queue to when receiving (-d out)
-  -q, --queue=       The queue to receive from (when used with -d in)
-  -P, --persistent   Use persistent messaging (false)
-  -n, --no-declare   If set, then don't attempt to declare the queue or bind it (false)
-  -f, --prefetch=    The number of outstanding acks a receiver will be limited to, default of 0 means unbounded (0)
-  -k, --key=         The key to use for routing (-d in) or for queue binding (-d out)
-  -c, --count=       The number of messages to send (10)
-  -i, --interval=    The delay (in ms) between sending or receiving messages (0)
-  -I, --info         If set, print basic server info (requires management API to be installed on the server) (false)
-  -g, --concurrency= The number of processes per connection (1)
-  -m, --connections= The number of connections to use (1)
-  -z, --size=        Message size in kB (1)
-  -t, --stddev=      Standard deviation of message size (0)
-  -r, --renew        Automatically resubscribe when the server cancels a subscription (used for mirrored queues) (false)
-  -u, --user=        The user to connect as (guest)
-  -w, --pass=        The user's password (guest)
-  -H, --host=        The Rabbit host to connect to (localhost)
-  -p, --port=        The Rabbit port to connect on (5672)
-  -e, --entropy      Display message level entropy information (false)
-  -V, --version      Print rmq version and exit
+  -Q, --queue-info=      List queues
+  -d, --direction=       Use rmq to send (-d in) or receive (-d out) messages
+  -x, --exchange=        The exchange to send to (-d in) or bind a queue to when receiving (-d out)
+  -q, --queue=           The queue to receive from (when used with -d in)
+  -T, --persistent       Use persistent messaging (false)
+  -n, --no-declare       If set, then don't attempt to declare the queue or bind it (false)
+  -f, --prefetch=        The number of outstanding acks a receiver will be limited to, default of 0 means unbounded (0)
+  -y, --priority=        The relative priority for receiving messages (0)
+  -G, --global-prefetch  Whether to share the prefetch limit accross all consumers of a channel (false)
+  -k, --key=             The key to use for routing (-d in) or for queue binding (-d out)
+  -c, --count=           The number of messages to send (10)
+  -i, --interval=        The delay (in ms) between sending or receiving messages (0)
+  -D, --delete           If set, it will remove the object specified by the -q or -a argument (false)
+  -I, --info             If set, print basic server info (requires management API to be installed on the server) (false)
+  -g, --concurrency=     The number of processes per connection (1)
+  -m, --connections=     The number of connections to use (1)
+  -z, --size=            Message size in kB (1)
+  -t, --stddev=          Standard deviation of message size (0)
+  -R, --replication=     The number of nodes to replicate queues to (0)
+  -N, --nodes=           The nodes to apply the command to (use with -a)
+  -A, --ha=              HA information
+  -a, --ha-name=         The HA policy name to use when creating a policy
+  -r, --renew            Automatically resubscribe when the server cancels a subscription (used for mirrored queues) (false)
+  -u, --user=            The user to connect as (guest)
+  -w, --pass=            The user's password (guest)
+  -H, --host=            The Rabbit host to connect to (127.0.0.1)
+  -p, --port=            The Rabbit port to connect on (5672)
+  -P, --management-port= The Rabbit HTTP management port to connect on (15672)
+  -e, --entropy          Display message level entropy information (false)
+  -V, --version          Print rmq version and exit
+  -v, --verbose          Show verbose debug information
 
 Help Options:
-  -h, --help       Show this help message
+  -h, --help             Show this help message
+
+Arguments:
+  MessageBody
 ```
 
 Roadmap
