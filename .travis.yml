@@ -13,7 +13,7 @@ before_script:
 
 script:
   - go build
-  - goxc -pv=0.2.$TRAVIS_BUILD_NUMBER
+  # - goxc -pv=0.2.$TRAVIS_BUILD_NUMBER
 
 deploy:
   provider: s3
