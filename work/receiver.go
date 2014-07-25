@@ -19,11 +19,15 @@ func StartReceiver(c *client, signal chan error, opts *Options) {
 	}
 
 	if !opts.NoDeclare {
-		_, err := declareQueue(ch, opts.Queue)
+		q, err := declareQueue(ch, opts.Queue)
 
 		if err != nil {
 			signal <- err
 			return
+		}
+
+		if opts.Queue == "" {
+			opts.Queue = q.Name
 		}
 	}
 
