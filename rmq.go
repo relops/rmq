@@ -62,13 +62,13 @@ func main() {
 		if opts.Info {
 			work.Info(rmqc)
 		} else if opts.Delete && len(opts.Queue) > 0 {
-			work.DeleteQueue(rmqc, opts.Queue)
+			work.DeleteQueue(rmqc, opts.Vhost, opts.Queue)
 		} else if len(opts.QueueInfo) > 0 && len(opts.HA) == 0 {
 			work.Queues(rmqc)
 		} else if opts.Delete && len(opts.HAName) > 0 {
-			work.DeleteMirror(rmqc, opts.HAName)
+			work.DeleteMirror(rmqc, opts.Vhost, opts.HAName)
 		} else if len(opts.HAName) > 0 && len(opts.Queue) > 0 {
-			work.CreateMirror(rmqc, opts.HAName, opts.Queue, opts.Replication, int(opts.Priority), opts.Nodes...)
+			work.CreateMirror(rmqc, opts.Vhost, opts.HAName, opts.Queue, opts.Replication, int(opts.Priority), opts.Nodes...)
 		} else if len(opts.HA) > 0 {
 			work.Mirroring(rmqc)
 		} else {

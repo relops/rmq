@@ -17,8 +17,8 @@ func Info(rmqc *rabbithole.Client) {
 	fmt.Printf("RabbitMQ Server %s\n", o.RabbitMQVersion)
 }
 
-func DeleteQueue(rmqc *rabbithole.Client, queue string) {
-	res, err := rmqc.DeleteQueue("/", queue)
+func DeleteQueue(rmqc *rabbithole.Client, vhost string, queue string) {
+	res, err := rmqc.DeleteQueue(vhost, queue)
 	if err != nil {
 		log.Errorf("Could not initialize management interface: %s", err)
 		os.Exit(1)
@@ -59,9 +59,8 @@ func Queues(rmqc *rabbithole.Client) {
 
 }
 
-func CreateMirror(rmqc *rabbithole.Client, name string, match string, rf, priority int, nodes ...string) {
+func CreateMirror(rmqc *rabbithole.Client, vhost string, name string, match string, rf, priority int, nodes ...string) {
 
-	vhost := "/"
 	def := rabbithole.PolicyDefinition{}
 	def["ha-mode"] = "all"
 
@@ -97,8 +96,8 @@ func CreateMirror(rmqc *rabbithole.Client, name string, match string, rf, priori
 
 }
 
-func DeleteMirror(rmqc *rabbithole.Client, name string) {
-	res, err := rmqc.DeletePolicy("/", name)
+func DeleteMirror(rmqc *rabbithole.Client, vhost string, name string) {
+	res, err := rmqc.DeletePolicy(vhost, name)
 	if err != nil {
 		log.Errorf("Could not initialize management interface: %s", err)
 		os.Exit(1)
