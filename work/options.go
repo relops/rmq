@@ -33,6 +33,7 @@ type Options struct {
 	Password          string   `short:"w" long:"pass" description:"The user's password" default:"guest"`
 	Host              string   `short:"H" long:"host" description:"The Rabbit host to connect to" default:"127.0.0.1"`
 	Port              int      `short:"p" long:"port" description:"The Rabbit port to connect on" default:"5672"`
+	Vhost             string   `short:"Y" long:"vhost" description:"The Rabbit vhost to connect to" default:"/"`
 	MgmtPort          int      `short:"P" long:"management-port" description:"The Rabbit HTTP management port to connect on" default:"15672"`
 	Entropy           bool     `short:"e" long:"entropy" description:"Display message level entropy information" default:"false"`
 	Version           func()   `short:"V" long:"version" description:"Print rmq version and exit"`
@@ -97,6 +98,7 @@ func (o *Options) uri() string {
 		Host:     o.Host,
 		Port:     o.Port,
 		Scheme:   "amqp",
+		Vhost:    o.Vhost,
 	}
 	return u.String()
 }
