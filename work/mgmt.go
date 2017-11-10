@@ -48,7 +48,7 @@ func Queues(rmqc *rabbithole.Client) {
 	table.SetRowSeparator("")
 	table.SetColumnSeparator("")
 	table.SetCenterSeparator("")
-	table.SetAlignment(tablewriter.ALIGN_CENTRE)
+	table.SetAlignment(tablewriter.ALIGN_CENTER)
 
 	table.Append([]string{"Queue", "Ready"})
 	for _, q := range qs {
@@ -126,7 +126,7 @@ func Mirroring(rmqc *rabbithole.Client) {
 	table.SetRowSeparator("")
 	table.SetColumnSeparator("")
 	table.SetCenterSeparator("")
-	table.SetAlignment(tablewriter.ALIGN_CENTRE)
+	table.SetAlignment(tablewriter.ALIGN_CENTER)
 
 	table.Append([]string{"Policy Name", "Queues", "Replication", "Priority"})
 	for _, p := range ps {

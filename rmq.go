@@ -24,7 +24,7 @@ var logConfig = `
 
 var (
 	opts    work.Options
-	VERSION string = "0.2.52"
+	VERSION string = "0.3.1"
 )
 
 func init() {
@@ -45,6 +45,7 @@ func init() {
 func main() {
 
 	if _, err := flags.Parse(&opts); err != nil {
+		fmt.Printf("%v\n", err)
 		os.Exit(0)
 	}
 
